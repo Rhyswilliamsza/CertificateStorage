@@ -4,10 +4,12 @@ package Engine;
 import Backend.DatabaseOperations;
 
 public class Main {
-    public static void main (String[] args){
+    public static void main(String[] args) {
         DatabaseOperations.connect();
-        DatabaseOperations.queryVoid("Create table certificates (id integer, name string");
 
-        DatabaseOperations.disconnect();
+
+        Interface.AddCertificate test = new Interface.AddCertificate();
+
+        //DatabaseOperations.disconnect();
     }
 }
