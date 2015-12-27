@@ -2,6 +2,7 @@
 package Interface;
 
 import Backend.CertificateOperations;
+import com.seaglasslookandfeel.*;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -25,11 +26,15 @@ public class Launcher extends JFrame {
     public static void addCertificateButtonClicked(String privateKey, String publicKey, String intermediate) {
         boolean success = CertificateOperations.addCertificate(privateKey, publicKey, intermediate);
         if (success) {
-            panels.listCertificatesTable.setModel(CertificateOperations.getTableModel());
+            updateTable();
             panels.addCertificatesPrivateKey.setText("");
             panels.addCertificatesPublicKey.setText("");
             panels.addCertificatesIntermediateCert.setText("");
         }
+    }
+
+    public static void updateTable() {
+        panels.listCertificatesTable.setModel(CertificateOperations.getTableModel());
     }
 
     private static void copyToClipboard(String data) {
@@ -52,6 +57,19 @@ public class Launcher extends JFrame {
         String selectedExpiryDate = panels.listCertificatesTable.getValueAt(selectedRow, 2).toString();
 
         copyToClipboard(CertificateOperations.getCertificatePair(selectedDomain, selectedExpiryDate).getPublicKey());
+    }
+
+    public static void deleteCertificatePair() {
+        int selectedRow = panels.listCertificatesTable.getSelectedRow();
+        String selectedDomain = panels.listCertificatesTable.getValueAt(selectedRow, 1).toString();
+        String selectedExpiryDate = panels.listCertificatesTable.getValueAt(selectedRow, 2).toString();
+
+        int result = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete the certificate for " + selectedDomain + " expiring " + selectedExpiryDate + "?", "Confirm", JOptionPane.YES_NO_OPTION);
+
+        if (result == JOptionPane.YES_OPTION) {
+            CertificateOperations.delCertificatePair(selectedDomain, selectedExpiryDate);
+            updateTable();
+        }
     }
 
     public static void copyIntermediateCert() {

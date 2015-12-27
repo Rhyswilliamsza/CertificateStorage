@@ -4,6 +4,7 @@
     <root id="archive" name="CertificateStorage.jar">
       <element id="module-output" name="CertificateStorage" />
       <element id="extracted-dir" path="$PROJECT_DIR$/res/miglayout-4.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/res/seaglasslookandfeel-0.2.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$PROJECT_DIR$/res/sqlite-jdbc-3.8.11.2.jar" path-in-jar="/" />
     </root>
   </artifact>

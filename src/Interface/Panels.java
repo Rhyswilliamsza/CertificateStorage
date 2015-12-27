@@ -70,7 +70,7 @@ public class Panels {
                 Launcher.copyPrivateKey();
             }
         });
-        listCertificatesPanel.add(copyPrivateKey, "cell 0 0");
+        listCertificatesPanel.add(copyPrivateKey, "cell 0 0, center");
 
         JButton copyPublicKey = new JButton("Copy Public Key");
         copyPublicKey.addMouseListener(new MouseAdapter() {
@@ -79,7 +79,7 @@ public class Panels {
                 Launcher.copyPublicKey();
             }
         });
-        listCertificatesPanel.add(copyPublicKey, "cell 0 0");
+        listCertificatesPanel.add(copyPublicKey, "cell 0 0, center");
 
         JButton copyIntermediateCert = new JButton("Copy Intermediate Certificate");
         copyIntermediateCert.addMouseListener(new MouseAdapter() {
@@ -88,7 +88,16 @@ public class Panels {
                 Launcher.copyIntermediateCert();
             }
         });
-        listCertificatesPanel.add(copyIntermediateCert, "cell 0 0");
+        listCertificatesPanel.add(copyIntermediateCert, "cell 0 0, center");
+
+        JButton deleteCert = new JButton("Delete Certificate");
+        deleteCert.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                Launcher.deleteCertificatePair();
+            }
+        });
+        listCertificatesPanel.add(deleteCert, "cell 0 0, center");
 
         JScrollPane listScroll = new JScrollPane(listCertificatesTable);
         listScroll.setPreferredSize(new Dimension(1000, 700));

@@ -8,7 +8,7 @@ public class DatabaseOperations {
 
     public static void connect() {
         try {
-            dbConnect = DriverManager.getConnection("jdbc:sqlite:Certificates.db");
+            dbConnect = DriverManager.getConnection("jdbc:sqlite:Data/Certificates.db");
             System.out.println("Database connected successfully!");
             create();
         } catch (SQLException e) {
@@ -20,7 +20,7 @@ public class DatabaseOperations {
         queryVoid("CREATE TABLE IF NOT EXISTS \"certificates\" (\n" +
                 "\t`private`\tString UNIQUE,\n" +
                 "\t`public`\tString UNIQUE,\n" +
-                "\t`intermediate`\tString UNIQUE\n" +
+                "\t`intermediate`\tString\n" +
                 ");");
     }
 

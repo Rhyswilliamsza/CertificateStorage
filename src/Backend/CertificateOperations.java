@@ -5,6 +5,7 @@ import Objects.CertificatePair;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.xml.crypto.Data;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -28,7 +29,8 @@ public class CertificateOperations {
     }
 
     //Save certificates back to SQLite DB
-    public static void saveCertificates(List<CertificatePair> certificates) {
+    public static void saveCertificates() {
+        DatabaseOperations.queryVoid("DELETE FROM certificates");
         for (int i = 0; i < certificates.size(); i++) {
             DatabaseOperations.queryVoid("INSERT OR IGNORE INTO certificates (private, public, intermediate) VALUES ('" + certificates.get(i).getPrivateKey() + "', '" + certificates.get(i).getPublicKey() + "', '" + certificates.get(i).getIntermediateCert() + "')");
         }
@@ -44,7 +46,7 @@ public class CertificateOperations {
                 JOptionPane.showMessageDialog(null, "Invalid Public Key!");
             } else {
                 certificates.add(new CertificatePair(privateKey, publicKey, intermediate));
-                saveCertificates(certificates); //Redundant saving
+                saveCertificates();
                 JOptionPane.showMessageDialog(null, "Certificate Saved!");
                 return true;
             }
@@ -64,7 +66,7 @@ public class CertificateOperations {
         model.addColumn("Base Domain");
         model.addColumn("Domain");
         model.addColumn("Expiry");
-        model.addColumn("Validity");
+        model.addColumn("Valid");
 
         //Populate table with information
         for (int i = 0; i < certificates.size(); i++) {
@@ -75,6 +77,7 @@ public class CertificateOperations {
         return model;
     }
 
+    //Retrieve certificate pair based on the domain name and expiry date
     public static CertificatePair getCertificatePair(String domain, String expiry) {
         for (int i = 0; i < certificates.size(); i++) {
             if (domain.equals(certificates.get(i).getDomainName()) && expiry.equals(certificates.get(i).getExpiryDate())) {
@@ -83,5 +86,17 @@ public class CertificateOperations {
         }
         return null;
     }
+
+    //Delete certificate pair based on the domain name and expiry date
+    public static void delCertificatePair(String domain, String expiry) {
+        for (int i = 0; i < certificates.size(); i++) {
+            if (domain.equals(certificates.get(i).getDomainName()) && expiry.equals(certificates.get(i).getExpiryDate())) {
+                certificates.remove(i);
+                saveCertificates();
+            }
+        }
+    }
+
+
 
 }
