@@ -1,14 +1,14 @@
 //RhysIT.co.za
 package Engine;
 
+import Backend.CertificateOperations;
 import Backend.DatabaseOperations;
 
 public class Main {
     public static void main(String[] args) {
         DatabaseOperations.connect();
-
-
-        Interface.AddCertificate test = new Interface.AddCertificate();
+        CertificateOperations.populateCertificates();
+        new Interface.Launcher();
 
         //DatabaseOperations.disconnect();
     }

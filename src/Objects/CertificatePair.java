@@ -3,10 +3,8 @@ package Objects;
 
 import javax.swing.*;
 import java.io.ByteArrayInputStream;
-import java.security.cert.CertificateException;
-import java.security.cert.CertificateFactory;
-import java.security.cert.X509Certificate;
-import java.util.Date;
+import java.security.cert.*;
+import java.text.SimpleDateFormat;
 
 public class CertificatePair {
     String privateKey;
@@ -22,7 +20,6 @@ public class CertificatePair {
             cert = (X509Certificate) certFact.generateCertificate(new ByteArrayInputStream(publicKey.getBytes()));
         } catch (CertificateException e) {
             JOptionPane.showMessageDialog(null, "That certificate is not valid and has not been added to the database!");
-            cert = null;
             e.printStackTrace();
         }
     }
@@ -35,11 +32,42 @@ public class CertificatePair {
         return privateKey;
     }
 
-    public Date getExpiryDate() {
-        return cert.getNotAfter();
+    public String getExpiryDate() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        return dateFormat.format(cert.getNotAfter());
     }
 
     public String getDomainName() {
-        return cert.getSubjectDN().getName();
+        try {
+            String domain = cert.getSubjectDN().getName().substring(cert.getSubjectDN().getName().indexOf("CN=") + 3);
+            if (domain.contains(",")) {
+                return domain.substring(0, domain.indexOf(","));
+            } else {
+                return domain;
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Something bad happened\n" + e);
+            return null;
+        }
+    }
+
+    public String getDomainBaseFirst() {
+        String domain = getDomainName();
+        String prefix = domain.substring(0, domain.indexOf("."));
+        String base = domain.substring(domain.indexOf(".") + 1);
+
+        return base + "_" + prefix;
+    }
+
+    public String getValidity() {
+        try {
+            cert.checkValidity();
+            return "Yes";
+        } catch (CertificateExpiredException e) {
+            return "Expired";
+        } catch (CertificateNotYetValidException e) {
+            return "Not Yet";
+        }
     }
 }
