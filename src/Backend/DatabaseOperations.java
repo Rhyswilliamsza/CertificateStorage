@@ -17,15 +17,11 @@ public class DatabaseOperations {
     }
 
     public static void create() {
-        queryVoid("CREATE TABLE IF NOT EXISTS certificates (\"private\" String, \"public\" String, UNIQUE (\"private\", \"public\"));");
-    }
-
-    public static void disconnect() {
-        try {
-            dbConnect.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        queryVoid("CREATE TABLE IF NOT EXISTS \"certificates\" (\n" +
+                "\t`private`\tString UNIQUE,\n" +
+                "\t`public`\tString UNIQUE,\n" +
+                "\t`intermediate`\tString UNIQUE\n" +
+                ");");
     }
 
     public static void queryVoid(String statement) {

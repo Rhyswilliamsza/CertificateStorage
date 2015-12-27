@@ -9,11 +9,13 @@ import java.text.SimpleDateFormat;
 public class CertificatePair {
     String privateKey;
     String publicKey;
+    String intermediateCert;
     X509Certificate cert;
 
-    public CertificatePair(String privateK, String publicK) {
+    public CertificatePair(String privateK, String publicK, String intermediate) {
         privateKey = privateK;
         publicKey = publicK;
+        intermediateCert = intermediate;
 
         try {
             CertificateFactory certFact = CertificateFactory.getInstance("X.509");
@@ -30,6 +32,10 @@ public class CertificatePair {
 
     public String getPrivateKey() {
         return privateKey;
+    }
+
+    public String getIntermediateCert() {
+        return intermediateCert;
     }
 
     public String getExpiryDate() {

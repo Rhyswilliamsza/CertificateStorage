@@ -19,7 +19,7 @@ public class CertificateOperations {
         try {
             ResultSet rs = DatabaseOperations.queryResultSet("SELECT * FROM certificates");
             while (rs.next()) {
-                certificates.add(new CertificatePair(rs.getString(1), rs.getString(2)));
+                certificates.add(new CertificatePair(rs.getString(1), rs.getString(2), rs.getString(3)));
             }
             System.out.println("Database fetched");
         } catch (SQLException e) {
@@ -30,20 +30,20 @@ public class CertificateOperations {
     //Save certificates back to SQLite DB
     public static void saveCertificates(List<CertificatePair> certificates) {
         for (int i = 0; i < certificates.size(); i++) {
-            DatabaseOperations.queryVoid("INSERT OR IGNORE INTO certificates (private, public) VALUES ('" + certificates.get(i).getPrivateKey() + "', '" + certificates.get(i).getPublicKey() + "')");
+            DatabaseOperations.queryVoid("INSERT OR IGNORE INTO certificates (private, public, intermediate) VALUES ('" + certificates.get(i).getPrivateKey() + "', '" + certificates.get(i).getPublicKey() + "', '" + certificates.get(i).getIntermediateCert() + "')");
         }
         System.out.println("Database updated");
     }
 
     //Add certificate to list
-    public static boolean addCertificate(String privateKey, String publicKey) {
+    public static boolean addCertificate(String privateKey, String publicKey, String intermediate) {
         if (!privateKey.contains("-----BEGIN RSA PRIVATE KEY-----")) {
             JOptionPane.showMessageDialog(null, "Invalid Private Key!");
         } else {
             if (!publicKey.contains("-----BEGIN CERTIFICATE-----")) {
                 JOptionPane.showMessageDialog(null, "Invalid Public Key!");
             } else {
-                certificates.add(new CertificatePair(privateKey, publicKey));
+                certificates.add(new CertificatePair(privateKey, publicKey, intermediate));
                 saveCertificates(certificates); //Redundant saving
                 JOptionPane.showMessageDialog(null, "Certificate Saved!");
                 return true;
