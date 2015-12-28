@@ -16,7 +16,7 @@ public class DatabaseOperations {
         }
     }
 
-    public static void create() {
+    private static void create() {
         queryVoid("CREATE TABLE IF NOT EXISTS \"certificates\" (\n" +
                 "\t`private`\tString UNIQUE,\n" +
                 "\t`public`\tString UNIQUE,\n" +

@@ -2,7 +2,6 @@
 package Interface;
 
 import Backend.CertificateOperations;
-import com.seaglasslookandfeel.*;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -10,21 +9,17 @@ import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 
-public class Launcher extends JFrame {
+public class Engine extends JFrame {
     static Panels panels;
 
-    public Launcher() {
+    public Engine() {
         panels = new Panels();
         setLookAndFeel();
-        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        this.add(initMainPanel());
-        this.pack();
-        this.setLocationRelativeTo(null);
-        this.setVisible(true);
+        setJFrameOptions();
     }
 
     public static void addCertificateButtonClicked(String privateKey, String publicKey, String intermediate) {
-        boolean success = CertificateOperations.addCertificate(privateKey, publicKey, intermediate);
+        boolean success = CertificateOperations.addCertificatePair(privateKey, publicKey, intermediate);
         if (success) {
             updateTable();
             panels.addCertificatesPrivateKey.setText("");
@@ -34,7 +29,11 @@ public class Launcher extends JFrame {
     }
 
     public static void updateTable() {
-        panels.listCertificatesTable.setModel(CertificateOperations.getTableModel());
+        panels.listCertificatesTable.setModel(CertificateOperations.getTableModel(null));
+    }
+
+    public static void updateTable(String search) {
+        panels.listCertificatesTable.setModel(CertificateOperations.getTableModel(search));
     }
 
     private static void copyToClipboard(String data) {
@@ -43,7 +42,7 @@ public class Launcher extends JFrame {
         clipboard.setContents(new StringSelection(data), null);
     }
 
-    public static void copyPrivateKey() {
+    public static void copySelectedPrivateKey() {
         int selectedRow = panels.listCertificatesTable.getSelectedRow();
         String selectedDomain = panels.listCertificatesTable.getValueAt(selectedRow, 1).toString();
         String selectedExpiryDate = panels.listCertificatesTable.getValueAt(selectedRow, 2).toString();
@@ -51,7 +50,7 @@ public class Launcher extends JFrame {
         copyToClipboard(CertificateOperations.getCertificatePair(selectedDomain, selectedExpiryDate).getPrivateKey());
     }
 
-    public static void copyPublicKey() {
+    public static void copySelectedPublicKey() {
         int selectedRow = panels.listCertificatesTable.getSelectedRow();
         String selectedDomain = panels.listCertificatesTable.getValueAt(selectedRow, 1).toString();
         String selectedExpiryDate = panels.listCertificatesTable.getValueAt(selectedRow, 2).toString();
@@ -59,7 +58,7 @@ public class Launcher extends JFrame {
         copyToClipboard(CertificateOperations.getCertificatePair(selectedDomain, selectedExpiryDate).getPublicKey());
     }
 
-    public static void deleteCertificatePair() {
+    public static void deleteSelectedCertificatePair() {
         int selectedRow = panels.listCertificatesTable.getSelectedRow();
         String selectedDomain = panels.listCertificatesTable.getValueAt(selectedRow, 1).toString();
         String selectedExpiryDate = panels.listCertificatesTable.getValueAt(selectedRow, 2).toString();
@@ -72,12 +71,25 @@ public class Launcher extends JFrame {
         }
     }
 
-    public static void copyIntermediateCert() {
+    public static void copySelectedIntermediateCert() {
         int selectedRow = panels.listCertificatesTable.getSelectedRow();
         String selectedDomain = panels.listCertificatesTable.getValueAt(selectedRow, 1).toString();
         String selectedExpiryDate = panels.listCertificatesTable.getValueAt(selectedRow, 2).toString();
 
         copyToClipboard(CertificateOperations.getCertificatePair(selectedDomain, selectedExpiryDate).getIntermediateCert());
+    }
+
+    public static void searchCertificatePair() {
+        String term = JOptionPane.showInputDialog("Please enter a domain name to search. Leave blank to show all.");
+        updateTable(term); //Update table to display search results
+    }
+
+    private void setJFrameOptions() {
+        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        this.add(initMainPanel());
+        this.pack();
+        this.setLocationRelativeTo(null);
+        this.setVisible(true);
     }
 
     private JPanel initMainPanel() {

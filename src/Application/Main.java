@@ -1,5 +1,5 @@
 //RhysIT.co.za
-package Engine;
+package Application;
 
 import Backend.CertificateOperations;
 import Backend.DatabaseOperations;
@@ -7,19 +7,22 @@ import Backend.DatabaseOperations;
 import javax.swing.*;
 import java.io.*;
 
-public class Engine {
+public class Main {
     public static void main(String[] args) {
-        genFoldersAndBackup();
-        DatabaseOperations.connect();
-        CertificateOperations.populateCertificates();
-        new Interface.Launcher();
+        genFolders();
+        backupDatabase();
 
-        //DatabaseOperations.disconnect();
+        DatabaseOperations.connect(); //Connect to database
+        CertificateOperations.populateCertificatesFromDB(); //Populate list from database
+        new Interface.Engine();
     }
 
-    private static void genFoldersAndBackup() {
+    private static void genFolders() {
+        new File("Data").mkdirs();
+    }
+
+    private static void backupDatabase() {
         try {
-            new File("Data").mkdirs();
             InputStream original = new FileInputStream("Data/Certificates.db");
             OutputStream copy = new FileOutputStream("Data/Certificates.db_backup");
             byte[] buf = new byte[1024];
@@ -30,6 +33,7 @@ public class Engine {
             original.close();
             copy.close();
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, e);}
+            JOptionPane.showMessageDialog(null, e);
+        }
     }
 }

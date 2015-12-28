@@ -1,6 +1,5 @@
 package Interface;
 
-import Backend.CertificateOperations;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -9,15 +8,15 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class Panels {
-    JTable listCertificatesTable;
-    JPanel listCertificatesPanel;
+    protected JTable listCertificatesTable;
+    protected JPanel listCertificatesPanel;
 
-    JPanel addCertificatesPanel;
-    JTextArea addCertificatesPrivateKey;
-    JTextArea addCertificatesPublicKey;
-    JTextArea addCertificatesIntermediateCert;
+    protected JPanel addCertificatesPanel;
+    protected JTextArea addCertificatesPrivateKey;
+    protected JTextArea addCertificatesPublicKey;
+    protected JTextArea addCertificatesIntermediateCert;
 
-    public JPanel AddCertificates() {
+    protected JPanel AddCertificates() {
         addCertificatesPanel = new JPanel(new MigLayout());
 
         JLabel privateKeyLabel = new JLabel("Private Key");
@@ -48,7 +47,7 @@ public class Panels {
         addButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                Launcher.addCertificateButtonClicked(addCertificatesPrivateKey.getText(), addCertificatesPublicKey.getText(), addCertificatesIntermediateCert.getText());
+                Engine.addCertificateButtonClicked(addCertificatesPrivateKey.getText(), addCertificatesPublicKey.getText(), addCertificatesIntermediateCert.getText());
             }
         });
         addCertificatesPanel.add(addButton, "cell 0 2");
@@ -56,9 +55,10 @@ public class Panels {
         return addCertificatesPanel;
     }
 
-    public JPanel ListCertificates() {
-        listCertificatesTable = new JTable(CertificateOperations.getTableModel());
+    protected JPanel ListCertificates() {
+        listCertificatesTable = new JTable();
         listCertificatesPanel = new JPanel(new MigLayout());
+        Engine.updateTable();
 
         listCertificatesTable.setRowHeight(25);
         listCertificatesTable.setAutoCreateRowSorter(true);
@@ -67,7 +67,7 @@ public class Panels {
         copyPrivateKey.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                Launcher.copyPrivateKey();
+                Engine.copySelectedPrivateKey();
             }
         });
         listCertificatesPanel.add(copyPrivateKey, "cell 0 0, center");
@@ -76,7 +76,7 @@ public class Panels {
         copyPublicKey.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                Launcher.copyPublicKey();
+                Engine.copySelectedPublicKey();
             }
         });
         listCertificatesPanel.add(copyPublicKey, "cell 0 0, center");
@@ -85,7 +85,7 @@ public class Panels {
         copyIntermediateCert.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                Launcher.copyIntermediateCert();
+                Engine.copySelectedIntermediateCert();
             }
         });
         listCertificatesPanel.add(copyIntermediateCert, "cell 0 0, center");
@@ -94,10 +94,19 @@ public class Panels {
         deleteCert.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                Launcher.deleteCertificatePair();
+                Engine.deleteSelectedCertificatePair();
             }
         });
         listCertificatesPanel.add(deleteCert, "cell 0 0, center");
+
+        JButton searchCert = new JButton("Search for certificate");
+        searchCert.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                Engine.searchCertificatePair();
+            }
+        });
+        listCertificatesPanel.add(searchCert, "cell 0 0, center");
 
         JScrollPane listScroll = new JScrollPane(listCertificatesTable);
         listScroll.setPreferredSize(new Dimension(1000, 700));
