@@ -11,6 +11,7 @@ public class Main {
     public static void main(String[] args) {
         genFolders();
         backupDatabase();
+        addShutdownHook ();
 
         DatabaseOperations.connect(); //Connect to database
         CertificateOperations.populateCertificatesFromDB(); //Populate list from database
@@ -19,6 +20,11 @@ public class Main {
 
     private static void genFolders() {
         new File("Data").mkdirs();
+    }
+
+    private static void addShutdownHook () {
+        Thread test = new Thread(new Application.ShutdownThread());
+        Runtime.getRuntime().addShutdownHook(test);
     }
 
     private static void backupDatabase() {

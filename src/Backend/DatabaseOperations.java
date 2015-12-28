@@ -16,6 +16,15 @@ public class DatabaseOperations {
         }
     }
 
+    public static void disconnect() {
+        try {
+            System.out.println("Database closed successfully!");
+            dbConnect.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     private static void create() {
         queryVoid("CREATE TABLE IF NOT EXISTS \"certificates\" (\n" +
                 "\t`private`\tString UNIQUE,\n" +
