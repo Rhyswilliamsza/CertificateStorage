@@ -8,25 +8,29 @@ import javax.swing.*;
 import java.io.*;
 
 public class Main {
+    //Run the program
     public static void main(String[] args) {
         genFolders();
         backupDatabase();
-        addShutdownHook ();
+        addShutdownHook();
 
         DatabaseOperations.connect(); //Connect to database
         CertificateOperations.populateCertificatesFromDB(); //Populate list from database
         new Interface.Engine();
     }
 
+    //Generate the 'Data' directory for files
     private static void genFolders() {
         new File("Data").mkdirs();
     }
 
-    private static void addShutdownHook () {
+    //Add a shutdown hook to close the database before exiting
+    private static void addShutdownHook() {
         Thread test = new Thread(new Application.ShutdownThread());
         Runtime.getRuntime().addShutdownHook(test);
     }
 
+    //Backup database to _backup file upon program startup
     private static void backupDatabase() {
         try {
             InputStream original = new FileInputStream("Data/Certificates.db");

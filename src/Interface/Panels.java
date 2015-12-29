@@ -16,6 +16,7 @@ public class Panels {
     protected JTextArea addCertificatesPublicKey;
     protected JTextArea addCertificatesIntermediateCert;
 
+    //Generate the addCertificates Panel
     protected JPanel AddCertificates() {
         addCertificatesPanel = new JPanel(new MigLayout());
 
@@ -55,6 +56,7 @@ public class Panels {
         return addCertificatesPanel;
     }
 
+    //Generate the listCertificates Panel
     protected JPanel ListCertificates() {
         listCertificatesTable = new JTable();
         listCertificatesPanel = new JPanel(new MigLayout());

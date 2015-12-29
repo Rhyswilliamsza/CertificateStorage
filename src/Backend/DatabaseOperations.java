@@ -6,6 +6,7 @@ import java.sql.*;
 public class DatabaseOperations {
     static Connection dbConnect = null;
 
+    //Connect to database, else call for create if not exists.
     public static void connect() {
         try {
             dbConnect = DriverManager.getConnection("jdbc:sqlite:Data/Certificates.db");
@@ -16,6 +17,7 @@ public class DatabaseOperations {
         }
     }
 
+    //Disconnect and close connection to database
     public static void disconnect() {
         try {
             System.out.println("Database closed successfully!");
@@ -25,6 +27,7 @@ public class DatabaseOperations {
         }
     }
 
+    //Create empty database for first run
     private static void create() {
         queryVoid("CREATE TABLE IF NOT EXISTS \"certificates\" (\n" +
                 "\t`private`\tString UNIQUE,\n" +
@@ -33,6 +36,7 @@ public class DatabaseOperations {
                 ");");
     }
 
+    //Run a query without returning anything
     public static void queryVoid(String statement) {
         try {
             Statement query = dbConnect.createStatement();
@@ -42,6 +46,7 @@ public class DatabaseOperations {
         }
     }
 
+    //Run a query and return a resultset
     public static ResultSet queryResultSet(String statement) {
         ResultSet rs = null;
         try {
