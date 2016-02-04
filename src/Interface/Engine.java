@@ -16,6 +16,7 @@ public class Engine extends JFrame {
         panels = new Panels();
         setLookAndFeel();
         setJFrameOptions();
+        this.setTitle("RhysIT Certificate Storage");
     }
 
     //Run when add certificate button clicked
